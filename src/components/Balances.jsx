@@ -113,7 +113,7 @@ export default function Balances({ roommates, expenses, settlements, onSettle, c
                     <span className="font-extrabold text-gray-900">{formatCurrency(d.amount)}</span>
                   </p>
                   <button
-                    onClick={() => onSettle(d)}
+                    onClick={() => onSettle({ ...d, amount: Math.abs(adjustedNet[d.from]) })}
                     className="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex-shrink-0"
                   >
                     تسوية
