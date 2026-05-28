@@ -5,7 +5,7 @@ export default function Settings({ roommates, onReset }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <div className="p-4 max-w-lg mx-auto space-y-4 lg:max-w-2xl lg:p-6">
+    <div className="p-4 md:p-6 max-w-lg mx-auto space-y-4 md:max-w-2xl">
       <h2 className="text-xl font-bold text-teal-800 flex items-center gap-2">
         <SettingsIcon className="w-6 h-6" />
         الإعدادات

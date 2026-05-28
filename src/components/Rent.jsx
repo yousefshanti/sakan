@@ -41,7 +41,7 @@ export default function Rent({ roommates, rentData, onUpdateRent }) {
   const sharePerPerson = data.amount > 0 ? data.amount / 3 : 0;
 
   return (
-    <div className="p-4 max-w-lg mx-auto space-y-4 lg:max-w-none lg:p-6">
+    <div className="p-4 md:p-6 max-w-lg mx-auto space-y-4 md:max-w-none">
       <h2 className="text-xl font-bold text-teal-800 flex items-center gap-2">
         <Home className="w-6 h-6" />
         الإيجار الشهري
@@ -60,8 +60,8 @@ export default function Rent({ roommates, rentData, onUpdateRent }) {
         <p className="text-sm opacity-80 mt-1">{paidCount}/3 دفعوا</p>
       </div>
 
-      {/* Two-column grid on desktop */}
-      <div className="lg:grid lg:grid-cols-2 lg:gap-6 space-y-4 lg:space-y-0">
+      {/* Two-column grid on tablet+ */}
+      <div className="md:grid md:grid-cols-2 md:gap-6 space-y-4 md:space-y-0">
 
       {/* Rent amount */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
@@ -152,7 +152,7 @@ export default function Rent({ roommates, rentData, onUpdateRent }) {
         </div>
       </div>
 
-      </div>{/* end two-column grid */}
+      </div>{/* end two-col grid */}
 
       {/* All paid message */}
       {allPaid && (

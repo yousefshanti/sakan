@@ -17,7 +17,7 @@ export default function History({ roommates, expenses, onDelete }) {
   const categoryEmoji = (cat) => CATEGORIES.find(c => c.value === cat)?.emoji || '📦';
 
   return (
-    <div className="p-4 max-w-lg mx-auto space-y-4 lg:max-w-none lg:p-6">
+    <div className="p-4 md:p-6 max-w-lg mx-auto space-y-4 md:max-w-none">
       <h2 className="text-xl font-bold text-teal-800 flex items-center gap-2">
         <HistoryIcon className="w-6 h-6" />
         سجل المصاريف
@@ -73,7 +73,7 @@ export default function History({ roommates, expenses, onDelete }) {
           <p>لا توجد فواتير</p>
         </div>
       ) : (
-        <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
+        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-3">
           {filtered.map(exp => (
             <div key={exp.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <div className="flex items-start justify-between gap-2">

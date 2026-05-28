@@ -63,11 +63,11 @@ export default function App() {
     addSettlement, updateRentData, reset,
   } = useAppData();
 
-  const [tab, setTab]                 = useState('add');
+  const [tab, setTab]                   = useState('add');
   const [showSettings, setShowSettings] = useState(false);
-  const [opError, setOpError]         = useState(null);
+  const [opError, setOpError]           = useState(null);
 
-  const [installPrompt, setInstallPrompt] = useState(null);
+  const [installPrompt, setInstallPrompt]       = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
 
   useEffect(() => {
@@ -90,7 +90,6 @@ export default function App() {
     }
   };
 
-  // Show a dismissible Arabic error banner when a write operation fails
   const withErrorHandling = (fn) => async (...args) => {
     try {
       setOpError(null);
@@ -120,14 +119,46 @@ export default function App() {
     window.location.reload();
   });
 
-  return (
-    <div className="flex flex-col min-h-screen lg:h-screen bg-gray-50 max-w-lg lg:max-w-6xl mx-auto" style={{ fontFamily: 'Tajawal, sans-serif' }}>
+  // ── Sidebar nav item ────────────────────────────────────────────────────────
+  const SidebarItem = ({ id, label, Icon }) => {
+    const active    = tab === id && !showSettings;
+    const showBadge = id === 'balances' && activeDebts.length > 0;
+    return (
+      <button
+        onClick={() => { setTab(id); setShowSettings(false); }}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 lg:px-4 lg:py-3 rounded-xl font-medium text-sm transition-colors ${
+          active ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'
+        }`}
+      >
+        <div className="relative flex-shrink-0">
+          <Icon className="w-5 h-5" />
+          {showBadge && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-400 rounded-full text-white text-[9px] flex items-center justify-center font-bold">
+              {activeDebts.length}
+            </span>
+          )}
+        </div>
+        <span className="flex-1 text-right">{label}</span>
+      </button>
+    );
+  };
 
-      {/* Header */}
+  return (
+    /*
+     * RTL flex-row: first DOM child = physical RIGHT, second = physical LEFT.
+     * Layout: [main (right/content)] [aside (left/sidebar)]
+     * This places the sidebar on the physical left of the screen as requested.
+     */
+    <div
+      className="flex flex-col min-h-screen md:h-screen bg-gray-50 max-w-lg md:max-w-none lg:max-w-7xl mx-auto"
+      style={{ fontFamily: 'Tajawal, sans-serif' }}
+    >
+      {/* ── Header ── */}
       <header className="bg-teal-700 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-md flex-shrink-0">
+        {/* Settings shortcut — always visible, useful on all screen sizes */}
         <button
           onClick={() => setShowSettings(s => !s)}
-          className="p-2 rounded-xl hover:bg-teal-600 lg:hidden"
+          className="p-2 rounded-xl hover:bg-teal-600"
         >
           <Settings className="w-5 h-5" />
         </button>
@@ -142,7 +173,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Operation error banner */}
+      {/* ── Operation error banner ── */}
       {opError && (
         <div className="bg-red-50 border-b border-red-200 px-4 py-2 flex items-center justify-between gap-3 flex-shrink-0 z-20">
           <p className="text-sm text-red-700 font-medium">{opError}</p>
@@ -150,79 +181,102 @@ export default function App() {
         </div>
       )}
 
-      {/* Install banner */}
+      {/* ── Install banner ── */}
       {showInstallBanner && (
         <div className="bg-teal-50 border-b border-teal-200 px-4 py-2 flex items-center justify-between gap-3 flex-shrink-0">
           <p className="text-sm text-teal-800 font-medium">📱 إضافة للشاشة الرئيسية</p>
           <div className="flex gap-2 flex-shrink-0">
-            <button onClick={handleInstall} className="text-xs bg-teal-600 text-white px-3 py-1.5 rounded-lg font-bold">
-              تثبيت
-            </button>
-            <button onClick={() => setShowInstallBanner(false)} className="text-xs text-teal-600 px-2 py-1.5">
-              لاحقاً
-            </button>
+            <button onClick={handleInstall} className="text-xs bg-teal-600 text-white px-3 py-1.5 rounded-lg font-bold">تثبيت</button>
+            <button onClick={() => setShowInstallBanner(false)} className="text-xs text-teal-600 px-2 py-1.5">لاحقاً</button>
           </div>
         </div>
       )}
 
-      {/* Body: sidebar (desktop) + main content */}
-      <div className="flex flex-1 min-h-0 lg:overflow-hidden">
+      {/* ── Body ── */}
+      <div className="flex flex-1 min-h-0 md:overflow-hidden">
 
-        {/* Desktop Sidebar Navigation */}
-        <aside className="hidden lg:flex flex-col w-64 bg-white border-l border-gray-200 flex-shrink-0 overflow-y-auto">
-          <nav className="p-3 space-y-1 flex-1">
-            {TABS.map(({ id, label, Icon }) => {
-              const active    = tab === id && !showSettings;
-              const showBadge = id === 'balances' && activeDebts.length > 0;
-              return (
-                <button
-                  key={id}
-                  onClick={() => { setTab(id); setShowSettings(false); }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-colors ${
-                    active ? 'bg-teal-50 text-teal-700' : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="relative flex-shrink-0">
-                    <Icon className="w-5 h-5" />
-                    {showBadge && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-400 rounded-full text-white text-[9px] flex items-center justify-center font-bold">
-                        {activeDebts.length}
-                      </span>
-                    )}
-                  </div>
-                  <span>{label}</span>
-                  {active && <span className="me-auto w-1.5 h-1.5 rounded-full bg-teal-600" />}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="p-3 border-t border-gray-200 flex-shrink-0">
+        {/*
+         * ① Main content — DOM FIRST → physical RIGHT in RTL.
+         *   On desktop, 'add' tab splits into [form (right)] + [balances panel (left)].
+         */}
+        <main className="flex-1 pb-24 md:pb-6 md:overflow-y-auto min-w-0">
+
+          {showSettings && (
+            <SettingsTab roommates={roommates} onReset={handleReset} />
+          )}
+
+          {/* 'add' tab ── single column on mobile/tablet, 2-col on desktop */}
+          {!showSettings && tab === 'add' && (
+            <>
+              {/* < lg: plain form */}
+              <div className="lg:hidden">
+                <AddExpense roommates={roommates} onAdd={handleAddExpense} />
+              </div>
+
+              {/* ≥ lg: form (right) + balances snapshot (left) */}
+              <div className="hidden lg:flex h-full">
+                {/* Add form — first child = physical RIGHT in RTL */}
+                <div className="flex-1 overflow-y-auto">
+                  <AddExpense roommates={roommates} onAdd={handleAddExpense} />
+                </div>
+                {/* Balances panel — second child = physical LEFT in RTL */}
+                <div className="w-96 flex-shrink-0 overflow-y-auto border-r border-gray-200 bg-white">
+                  <Balances
+                    compact
+                    roommates={roommates}
+                    expenses={expenses}
+                    settlements={settlements}
+                    onSettle={handleSettle}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
+          {!showSettings && tab === 'balances' && (
+            <Balances roommates={roommates} expenses={expenses} settlements={settlements} onSettle={handleSettle} />
+          )}
+          {!showSettings && tab === 'history'  && (
+            <HistoryTab roommates={roommates} expenses={expenses} onDelete={handleDeleteExpense} />
+          )}
+          {!showSettings && tab === 'rent'     && (
+            <Rent roommates={roommates} rentData={rentData} onUpdateRent={handleUpdateRent} />
+          )}
+          {!showSettings && tab === 'reports'  && (
+            <Reports roommates={roommates} expenses={expenses} />
+          )}
+        </main>
+
+        {/*
+         * ② Sidebar — DOM SECOND → physical LEFT in RTL.
+         *   Visible from md (768 px) upward; hidden on mobile.
+         */}
+        <aside className="hidden md:flex flex-col w-52 lg:w-64 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+          <div className="p-3 lg:p-4">
+            <p className="text-xs font-bold text-gray-400 px-3 mb-2 mt-1">القائمة</p>
+            <nav className="space-y-1">
+              {TABS.map(({ id, label, Icon }) => (
+                <SidebarItem key={id} id={id} label={label} Icon={Icon} />
+              ))}
+            </nav>
+          </div>
+          <div className="mt-auto p-3 lg:p-4 border-t border-gray-100">
             <button
               onClick={() => setShowSettings(s => !s)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-colors ${
-                showSettings ? 'bg-teal-50 text-teal-700' : 'text-gray-600 hover:bg-gray-50'
+              className={`w-full flex items-center gap-3 px-3 py-2.5 lg:px-4 lg:py-3 rounded-xl font-medium text-sm transition-colors ${
+                showSettings ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               <Settings className="w-5 h-5 flex-shrink-0" />
-              <span>الإعدادات</span>
+              <span className="flex-1 text-right">الإعدادات</span>
             </button>
           </div>
         </aside>
 
-        {/* Main content */}
-        <main className="flex-1 pb-24 lg:pb-6 lg:overflow-y-auto">
-          {showSettings && <SettingsTab roommates={roommates} onReset={handleReset} />}
-          {!showSettings && tab === 'add'      && <AddExpense roommates={roommates} onAdd={handleAddExpense} />}
-          {!showSettings && tab === 'balances' && <Balances roommates={roommates} expenses={expenses} settlements={settlements} onSettle={handleSettle} />}
-          {!showSettings && tab === 'history'  && <HistoryTab roommates={roommates} expenses={expenses} onDelete={handleDeleteExpense} />}
-          {!showSettings && tab === 'rent'     && <Rent roommates={roommates} rentData={rentData} onUpdateRent={handleUpdateRent} />}
-          {!showSettings && tab === 'reports'  && <Reports roommates={roommates} expenses={expenses} />}
-        </main>
-
       </div>
 
-      {/* Bottom tab bar — mobile only */}
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white border-t border-gray-200 flex z-20 shadow-lg lg:hidden">
+      {/* ── Bottom tab bar — mobile only (< md) ── */}
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white border-t border-gray-200 flex z-20 shadow-lg md:hidden">
         {TABS.map(({ id, label, Icon }) => {
           const active    = tab === id && !showSettings;
           const showBadge = id === 'balances' && activeDebts.length > 0;

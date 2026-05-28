@@ -43,7 +43,7 @@ export default function Reports({ roommates, expenses }) {
   };
 
   return (
-    <div className="p-4 max-w-lg mx-auto space-y-4 lg:max-w-none lg:p-6">
+    <div className="p-4 md:p-6 max-w-lg mx-auto space-y-4 md:max-w-none">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-teal-800 flex items-center gap-2">
           <BarChart2 className="w-6 h-6" />
@@ -71,8 +71,8 @@ export default function Reports({ roommates, expenses }) {
         <p className="text-sm opacity-80 mt-1">{scoped.length} فاتورة</p>
       </div>
 
-      {/* Two-column grid on desktop */}
-      <div className="lg:grid lg:grid-cols-2 lg:gap-6 space-y-4 lg:space-y-0">
+      {/* Two-column grid on tablet+ */}
+      <div className="md:grid md:grid-cols-2 md:gap-6 space-y-4 md:space-y-0">
 
         {/* By person */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -125,7 +125,7 @@ export default function Reports({ roommates, expenses }) {
           </div>
         )}
 
-      </div>{/* end two-column grid */}
+      </div>{/* end two-col grid */}
 
       {/* By category chart — full width */}
       {byCat.length > 0 && (

@@ -34,7 +34,7 @@ export default function AddExpense({ roommates, onAdd }) {
   };
 
   return (
-    <div className="p-4 max-w-lg mx-auto lg:max-w-2xl lg:p-6">
+    <div className="p-4 md:p-6 max-w-lg mx-auto md:max-w-2xl lg:max-w-xl xl:max-w-2xl">
       <h2 className="text-xl font-bold text-teal-800 mb-4 flex items-center gap-2">
         <PlusCircle className="w-6 h-6" />
         إضافة فاتورة جديدة
