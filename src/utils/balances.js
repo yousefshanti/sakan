@@ -10,10 +10,18 @@ export function computeNetBalances(roommates, expenses) {
 
   expenses.forEach(exp => {
     if (!exp.active) return;
-    const share = r2(exp.amount / 3);
-    net[exp.paidBy] = r2((net[exp.paidBy] || 0) + exp.amount);
+    const n          = roommates.length;
+    const share      = r2(exp.amount / n);
+    // Payer absorbs the rounding remainder so the sum of all net balances stays 0.
+    // e.g. 100/3 → share=33.33, payerShare=33.34, others=33.33 each → total=100 ✓
+    const payerShare = r2(exp.amount - (n - 1) * share);
+
     roommates.forEach(r => {
-      net[r] = r2((net[r] || 0) - share);
+      if (r === exp.paidBy) {
+        net[r] = r2((net[r] || 0) + exp.amount - payerShare);
+      } else {
+        net[r] = r2((net[r] || 0) - share);
+      }
     });
   });
 
